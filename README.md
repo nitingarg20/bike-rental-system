@@ -2,6 +2,8 @@
 
 A full-stack bike rental app: MySQL database (tables, triggers, stored procedures) + a Node.js/Express REST API + a plain HTML/CSS/JS frontend.
 
+This started as a DBMS coursework project (see `docs/DBMS_project_report.docx` and `docs/ER Diagram.jpg`) and has since grown into a full-stack implementation.
+
 ```
 bike-rental-system/
 ├── database/
@@ -77,6 +79,26 @@ Easiest options:
 - **Python**: `cd frontend && python3 -m http.server 5500` then open `http://localhost:5500`.
 
 The frontend calls the API at `http://localhost:4000/api` — that's hardcoded in `frontend/js/api.js` (`API_BASE`). Change it there if you run the backend on a different port or host.
+
+## Screenshots
+
+Drop your screenshot PNGs/JPGs into the `screenshots/` folder at the project root, then reference them here like this:
+
+```markdown
+### Bike browsing
+![Browse bikes](screenshots/browse-bikes.png)
+
+### Sign up
+![Sign up](screenshots/signup.png)
+
+### My bookings
+![My bookings](screenshots/my-bookings.png)
+
+### Admin dashboard
+![Admin dashboard](screenshots/admin-dashboard.png)
+```
+
+GitHub renders these automatically once pushed, since the paths are relative to the README's own location in the repo.
 
 ## What each part covers
 
