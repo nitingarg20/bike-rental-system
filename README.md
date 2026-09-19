@@ -82,9 +82,6 @@ The frontend calls the API at `http://localhost:4000/api` — that's hardcoded i
 
 ## Screenshots
 
-Drop your screenshot PNGs/JPGs into the `screenshots/` folder at the project root, then reference them here like this:
-
-```markdown
 ### Bike browsing
 ![Browse bikes](screenshots/browse-bikes.png)
 
@@ -96,9 +93,6 @@ Drop your screenshot PNGs/JPGs into the `screenshots/` folder at the project roo
 
 ### Admin dashboard
 ![Admin dashboard](screenshots/admin-dashboard.png)
-```
-
-GitHub renders these automatically once pushed, since the paths are relative to the README's own location in the repo.
 
 ## What each part covers
 
