@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign up &mdash; Bike Rental System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a href="index.html" class="brand">Spoke<span>&</span>Go</a>
+    <nav class="nav" id="nav"></nav>
+  </div>
+</header>
+
+<main class="wrap auth-card">
+  <div class="card">
+    <h1 style="margin-top:0; font-size:1.4rem;">Create an account</h1>
+    <div id="msg" class="msg" style="display:none"></div>
+    <form id="registerForm">
+      <div class="row2">
+        <div class="field">
+          <label for="firstName">First name</label>
+          <input type="text" id="firstName" required>
+        </div>
+        <div class="field">
+          <label for="lastName">Last name</label>
+          <input type="text" id="lastName" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+      </div>
+      <div class="field">
+        <label for="phone">Phone (optional)</label>
+        <input type="text" id="phone">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" required minlength="6">
+      </div>
+      <button type="submit" class="btn">Sign up</button>
+    </form>
+    <div class="switch-link">Already have an account? <a href="login.html">Log in</a></div>
+  </div>
+</main>
+
+<script src="js/api.js"></script>
+<script src="js/register.js"></script>
+</body>
+</html>

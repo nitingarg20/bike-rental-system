@@ -1,8 +1,10 @@
 /* ===========================================================
-   FILE 04 : PROCEDURES & TRIGGERS
+   FILE 02 : PROCEDURES & TRIGGERS
+   Bike Rental System
    =========================================================== */
 
--- drop old procedures and triggers
+USE bike_rental;
+
 DROP PROCEDURE IF EXISTS AddBike;
 DROP PROCEDURE IF EXISTS CancelBooking;
 DROP PROCEDURE IF EXISTS GetAvailableBikesByLocation;
@@ -12,12 +14,12 @@ DROP PROCEDURE IF EXISTS BookBike;
 DROP PROCEDURE IF EXISTS ReturnBike;
 
 DROP TRIGGER IF EXISTS prevent_double_booking;
+DROP TRIGGER IF EXISTS prevent_user_double_booking;
 DROP TRIGGER IF EXISTS update_bike_status_after_booking;
 
 ---------------------------------------------------------------
 -- AddBike
 ---------------------------------------------------------------
-
 DELIMITER //
 CREATE PROCEDURE AddBike(
     IN p_Model VARCHAR(50),
@@ -33,13 +35,14 @@ BEGIN
 
     INSERT INTO Bike(Model,Brand,Status,LocationID,RatePerHour)
     VALUES(p_Model,p_Brand,p_Status,p_LocationID,p_RatePerHour);
+
+    SELECT LAST_INSERT_ID() AS NewBikeID;
 END //
 DELIMITER ;
 
 ---------------------------------------------------------------
 -- CancelBooking
 ---------------------------------------------------------------
-
 DELIMITER //
 CREATE PROCEDURE CancelBooking(IN p_BooklogID INT)
 BEGIN
@@ -56,7 +59,6 @@ DELIMITER ;
 ---------------------------------------------------------------
 -- GetAvailableBikesByLocation
 ---------------------------------------------------------------
-
 DELIMITER //
 CREATE PROCEDURE GetAvailableBikesByLocation(IN p_LocationID INT)
 BEGIN
@@ -65,23 +67,23 @@ BEGIN
 END //
 DELIMITER ;
 
--- -------------------------------------------------------------
+---------------------------------------------------------------
 -- GetUserBookingHistory
--- -------------------------------------------------------------
-
+---------------------------------------------------------------
 DELIMITER //
 CREATE PROCEDURE GetUserBookingHistory(IN p_UserID INT)
 BEGIN
-    SELECT * FROM Booking
-    WHERE UserID=p_UserID
-    ORDER BY StartTime DESC;
+    SELECT b.*, k.Model, k.Brand
+    FROM Booking b
+    JOIN Bike k ON k.BikeID = b.BikeID
+    WHERE b.UserID=p_UserID
+    ORDER BY b.StartTime DESC;
 END //
 DELIMITER ;
 
 ---------------------------------------------------------------
 -- UndoCancelBooking
 ---------------------------------------------------------------
-
 DELIMITER //
 CREATE PROCEDURE UndoCancelBooking(IN p_BooklogID INT)
 BEGIN
@@ -95,11 +97,9 @@ BEGIN
 END //
 DELIMITER ;
 
--- -------------------------------------------------------------
--- BookBike (with Payment creation)
--- -------------------------------------------------------------
-
-DROP PROCEDURE IF EXISTS BookBike;
+---------------------------------------------------------------
+-- BookBike (creates Booking + Payment, updates Bike status)
+---------------------------------------------------------------
 DELIMITER //
 CREATE PROCEDURE BookBike(
     IN p_BikeID INT,
@@ -114,13 +114,11 @@ BEGIN
     DECLARE v_newBookingID INT;
     DECLARE v_userConflict INT DEFAULT 0;
 
-    -- Check if user exists
     IF NOT EXISTS (SELECT 1 FROM User WHERE UserID = p_UserID) THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'User does not exist.';
     END IF;
 
-    -- Check if user already has overlapping booking
     SELECT COUNT(*) INTO v_userConflict
     FROM Booking
     WHERE UserID = p_UserID
@@ -133,7 +131,6 @@ BEGIN
         SET MESSAGE_TEXT = 'User already has a booking during this time.';
     END IF;
 
-    -- Check if bike is available
     SELECT RatePerHour INTO v_rate
     FROM Bike
     WHERE BikeID = p_BikeID AND Status = 'Available';
@@ -143,33 +140,28 @@ BEGIN
         SET MESSAGE_TEXT = 'Bike not available.';
     END IF;
 
-    -- Duration calculation
     SET v_duration = TIMESTAMPDIFF(MINUTE, p_StartTime, p_EndTime) / 60;
     SET v_total = ROUND(v_duration * v_rate, 2);
 
-    -- Insert booking
     INSERT INTO Booking (UserID, BikeID, StartTime, EndTime, TotalCost, Status)
     VALUES (p_UserID, p_BikeID, p_StartTime, p_EndTime, v_total, 'Confirmed');
 
     SET v_newBookingID = LAST_INSERT_ID();
 
-    -- Insert payment
     INSERT INTO Payment (BooklogID, UserID, Amount, PaymentMethod, PaymentStatus)
     VALUES (v_newBookingID, p_UserID, v_total, 'Card', 'Completed');
 
-    -- Update bike status
-    UPDATE Bike 
-    SET Status = 'Rented' 
+    UPDATE Bike
+    SET Status = 'Rented'
     WHERE BikeID = p_BikeID;
 
+    SELECT v_newBookingID AS NewBookingID, v_total AS TotalCost;
 END //
 DELIMITER ;
-
 
 ---------------------------------------------------------------
 -- ReturnBike
 ---------------------------------------------------------------
-
 DELIMITER //
 CREATE PROCEDURE ReturnBike(IN p_BooklogID INT)
 BEGIN
@@ -198,9 +190,8 @@ END //
 DELIMITER ;
 
 ---------------------------------------------------------------
--- Trigger: Prevent Double Booking
+-- Trigger: Prevent Double Booking (per bike)
 ---------------------------------------------------------------
-
 DELIMITER //
 CREATE TRIGGER prevent_double_booking
 BEFORE INSERT ON Booking
@@ -219,24 +210,8 @@ END //
 DELIMITER ;
 
 ---------------------------------------------------------------
--- Trigger: Update Bike Status After Booking
+-- Trigger: Prevent Double Booking (per user)
 ---------------------------------------------------------------
-
-DELIMITER //
-CREATE TRIGGER update_bike_status_after_booking
-AFTER INSERT ON Booking
-FOR EACH ROW
-BEGIN
-    IF NEW.Status='Confirmed' THEN
-        UPDATE Bike SET Status='Rented'
-        WHERE BikeID=NEW.BikeID;
-    END IF;
-END //
-DELIMITER ;
-
-
--- User cannot book more than one bike at a same time interval
-DROP TRIGGER IF EXISTS prevent_user_double_booking;
 DELIMITER //
 CREATE TRIGGER prevent_user_double_booking
 BEFORE INSERT ON Booking
@@ -251,6 +226,21 @@ BEGIN
     THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'User already has a booking during this time.';
+    END IF;
+END //
+DELIMITER ;
+
+---------------------------------------------------------------
+-- Trigger: Update Bike Status After Booking
+---------------------------------------------------------------
+DELIMITER //
+CREATE TRIGGER update_bike_status_after_booking
+AFTER INSERT ON Booking
+FOR EACH ROW
+BEGIN
+    IF NEW.Status='Confirmed' THEN
+        UPDATE Bike SET Status='Rented'
+        WHERE BikeID=NEW.BikeID;
     END IF;
 END //
 DELIMITER ;

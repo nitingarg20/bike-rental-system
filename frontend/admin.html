@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin &mdash; Bike Rental System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a href="index.html" class="brand">Spoke<span>&</span>Go</a>
+    <nav class="nav" id="nav"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- Admin login gate -->
+  <div id="adminLogin" class="auth-card" style="display:none;">
+    <div class="card">
+      <h1 style="margin-top:0; font-size:1.4rem;">Admin login</h1>
+      <div id="loginMsg" class="msg" style="display:none"></div>
+      <form id="adminLoginForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="admin1@bikerental.com">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="admin123">
+          <span class="hint">Demo admins all use the password: admin123</span>
+        </div>
+        <button type="submit" class="btn">Log in</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin dashboard -->
+  <div id="adminDashboard" style="display:none;">
+    <div class="page-head">
+      <h1>Admin dashboard</h1>
+      <p>Fleet overview, bookings, and inventory management.</p>
+    </div>
+
+    <div id="msg" class="msg" style="display:none"></div>
+
+    <div class="stat-grid" id="statGrid"></div>
+
+    <div class="section">
+      <h2>Add a bike</h2>
+      <div class="card" style="max-width:520px;">
+        <form id="addBikeForm">
+          <div class="row2">
+            <div class="field">
+              <label for="model">Model</label>
+              <input type="text" id="model" required>
+            </div>
+            <div class="field">
+              <label for="brandInput">Brand</label>
+              <input type="text" id="brandInput" required>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="rate">Rate / hour ($)</label>
+              <input type="number" id="rate" step="0.01" min="0" required>
+            </div>
+            <div class="field">
+              <label for="statusSelect">Status</label>
+              <select id="statusSelect">
+                <option value="Available">Available</option>
+                <option value="Maintenance">Maintenance</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="locationSelect">Location</label>
+            <select id="locationSelect"></select>
+          </div>
+          <button type="submit" class="btn">Add bike</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Fleet</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Model</th><th>Brand</th><th>Location</th><th>Rate</th><th>Status</th></tr></thead>
+          <tbody id="fleetRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>All bookings</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Rider</th><th>Bike</th><th>Start</th><th>End</th><th>Total</th><th>Status</th></tr></thead>
+          <tbody id="bookingRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script src="js/api.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

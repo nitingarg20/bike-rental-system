@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Bookings &mdash; Bike Rental System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a href="index.html" class="brand">Spoke<span>&</span>Go</a>
+    <nav class="nav" id="nav"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>My bookings</h1>
+    <p>Manage your active rentals and review your history.</p>
+  </div>
+
+  <div id="msg" class="msg" style="display:none"></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Booking</th>
+          <th>Bike</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="bookingRows"></tbody>
+    </table>
+  </div>
+</main>
+
+<script src="js/api.js"></script>
+<script src="js/bookings.js"></script>
+</body>
+</html>

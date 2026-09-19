@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in &mdash; Bike Rental System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a href="index.html" class="brand">Spoke<span>&</span>Go</a>
+    <nav class="nav" id="nav"></nav>
+  </div>
+</header>
+
+<main class="wrap auth-card">
+  <div class="card">
+    <h1 style="margin-top:0; font-size:1.4rem;">Log in</h1>
+    <div id="msg" class="msg" style="display:none"></div>
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="john.doe@example.com">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" required placeholder="password123">
+        <span class="hint">Demo users all use the password: password123</span>
+      </div>
+      <button type="submit" class="btn">Log in</button>
+    </form>
+    <div class="switch-link">No account? <a href="register.html">Sign up</a></div>
+  </div>
+</main>
+
+<script src="js/api.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>

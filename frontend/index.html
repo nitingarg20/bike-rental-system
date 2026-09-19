@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bike Rental System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a href="index.html" class="brand">Spoke<span>&</span>Go</a>
+    <nav class="nav" id="nav"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Find a bike nearby</h1>
+    <p>Browse available bikes by location and book by the hour.</p>
+  </div>
+
+  <div id="msg" class="msg" style="display:none"></div>
+
+  <div class="filter-bar">
+    <div class="field">
+      <label for="locationFilter">Location</label>
+      <select id="locationFilter">
+        <option value="">All locations</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="statusFilter">Status</label>
+      <select id="statusFilter">
+        <option value="">All</option>
+        <option value="Available" selected>Available only</option>
+        <option value="Rented">Rented</option>
+        <option value="Maintenance">Maintenance</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="bikeGrid" class="grid"></div>
+</main>
+
+<footer>Bike Rental System &mdash; a demo full-stack project</footer>
+
+<!-- Booking modal (simple inline panel, no library) -->
+<div id="bookOverlay" style="display:none; position:fixed; inset:0; background:rgba(28,35,33,0.55); align-items:center; justify-content:center; z-index:50;">
+  <div class="card" style="max-width:380px; width:92%;">
+    <h3 id="bookTitle" style="margin-top:0;">Book this bike</h3>
+    <div id="bookMsg" class="msg" style="display:none"></div>
+    <form id="bookForm">
+      <div class="field">
+        <label for="startTime">Start</label>
+        <input type="datetime-local" id="startTime" required>
+      </div>
+      <div class="field">
+        <label for="endTime">End</label>
+        <input type="datetime-local" id="endTime" required>
+      </div>
+      <div class="field">
+        <span class="hint" id="estimateHint"></span>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button type="button" class="btn secondary" id="cancelBook">Cancel</button>
+        <button type="submit" class="btn">Confirm booking</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/bikes.js"></script>
+</body>
+</html>
